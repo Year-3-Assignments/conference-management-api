@@ -1,4 +1,5 @@
 import User from './User.model';
+import mongoose from 'mongoose';
 import RoleRequest from './RoleRequest.model';
 import Notification from './Notification.model';
 import response from '../../../../lib/response.handler';
@@ -83,16 +84,23 @@ export async function updateUserAccount(req, res, next) {
 export async function requestForRoleChange(req, res, next) {
   if (req.user) {
     const roleChange = new RoleRequest(req.body);
-    await roleChange.save();
-    const notificationData = {
-      message: `Your request to become ${req.body.requestrole} is sent successfully`,
-      to: req.user._id,
-      isarchive: false
-    }
-    const notification = new Notification(notificationData);
-    await notification.save();
-    response.sendRespond(res, roleChange);
-    next();
+    await roleChange.save()
+    .then(async () => {
+      await User.findByIdAndUpdate(req.user.id, { isrolerequested: true });
+      const notificationData = {
+        from: '60dd6e43b4582435c46122c9',
+        message: `Your request to become ${req.body.requestrole} is sent successfully`,
+        to: req.user._id,
+        isarchive: false
+      };
+      const notification = new Notification(notificationData);
+      await notification.save();
+      response.sendRespond(res, roleChange);
+      next();
+    })
+    .catch(error => {
+      return res.status(500).json(error.message);
+    })
   } else {
     response.handleError(res, 'User have to register to the system');
   }

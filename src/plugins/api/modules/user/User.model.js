@@ -16,6 +16,7 @@ const UserSchema = new Schema({
   workshops:  [{ type: Schema.Types.ObjectId, required: false, ref: 'workshops' }],
   attending_conferences:  [{ type: Schema.Types.ObjectId, required: false, ref: 'conferences' }],
   attending_workshops: [{ type: Schema.Types.ObjectId, required: false, ref: 'workshops' }],
+  isrolerequested: { type: Boolean, required: false, default: false },
   token: { type: String }
 }, {
   strict: false,

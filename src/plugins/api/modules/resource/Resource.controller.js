@@ -1,29 +1,26 @@
 import Resource from './Resource.model';
+import Payment from '../payment/Payment.model';
 import Notification from '../user/Notification.model';
 import response from '../../../../lib/response.handler';
 import _ from 'lodash';
 
 export async function createResource(req, res, next) {
-  if (req.body) {
-    let resource = new Resource(req.body);
-    await resource.save()
-    .then(() => {
-      const notificationData = {
-        from: '60dd6e43b4582435c46122c9',
-        message: `Dear ${req.user.firstname} ${req.user.lastname}, your resource request successfully sent to the reviewer`,
-        to: req.user._id,
-        isarchive: false
-      }
-      const notification = new Notification(notificationData);
-      notification.save();
-      response.sendRespond(res, resource);
-      next();
-    })
-    .catch(error => {
-      response.handleError(res, error.message);
-      next();
-    });
-  }
+  let resource = new Resource(req.body);
+  await resource.save()
+  .then((data) => {
+    const notificationData = {
+      from: '60dd6e43b4582435c46122c9',
+      message: `Dear ${req.user.firstname} ${req.user.lastname}, your resource request successfully sent to the reviewer`,
+      to: req.user._id,
+      isarchive: false
+    }
+    const notification = new Notification(notificationData);
+    notification.save();
+    return res.status(200).json(data);
+  })
+  .catch(error => {
+    return res.status(500).json(error.message);
+  });
 }
 
 export async function getUserResorces(req, res, next) {
@@ -191,6 +188,29 @@ export async function makeResourcePaid(req, res, next) {
       response.handleError(res, 'Resource not found');
       return;
     }
+
+    const paymentDetails = {
+      resource: req.params.id,
+      user: req.user._id,
+      amount: req.body.amount
+    };
+
+    console.log(paymentDetails)
+
+    const payment = new Payment(paymentDetails);
+    await payment.save();
+
+    await Notification.findByIdAndUpdate(req.body.notificationId, { isarchive: true });
+
+    const notificationData = {
+      from: '60dd6e43b4582435c46122c9',
+      message: `Dear ${req.user.firstname}, your payment for resource is successful. Thank you`,
+      to: req.user._id,
+      isarchive: false
+    }
+
+    const notification = new Notification(notificationData);
+    await notification.save();
 
     await Resource.findByIdAndUpdate(req.params.id, { ispaid: true })
     .then(data => {

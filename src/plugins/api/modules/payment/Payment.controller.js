@@ -67,19 +67,12 @@ export async function chargeAmount(req, res, next) {
 
 export async function chargeResourceAmount(req, res, next) {
   if (req.user && req.body) {
-    // let { status } = await stripe.charges.create({
-    //   amount: req.body.amount,
-    //   currency: 'LKR',
-    //   source: req.body.token
-    // });
-
-    // Add Payment Details to Payment Collection
     let paymentDetail ={
       conference: req.body.conference_id,
       attendee: req.user._id,
       amount: req.body.amount,
       source: req.body.token
-    }
+    };
 
     let conference_resource = null;
     let payment = new Payment(paymentDetail);
@@ -97,7 +90,7 @@ export async function chargeResourceAmount(req, res, next) {
       return;
     })
     .catch(error => {
-      res.status(400).send({message: 'Error Occured: ' + error.message });
+      res.status(400).send({ message: 'Error Occured: ' + error.message });
       return;
     });
   }

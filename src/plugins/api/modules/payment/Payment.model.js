@@ -1,8 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
 
 const PaymentSchema = new Schema({
-  conference: { type: Schema.Types.ObjectId, required: true, ref: 'conferences' },
-  attendee: { type: Schema.Types.ObjectId, required: true, ref: 'users' },
+  resource: { type: Schema.Types.ObjectId, required: false, ref: 'resources' },
+  user: { type: Schema.Types.ObjectId, required: false, ref: 'users' },
+  conference: { type: Schema.Types.ObjectId, required: false, ref: 'conferences' },
+  attendee: { type: Schema.Types.ObjectId, required: false, ref: 'users' },
   amount: { type: String, required: true, trim: true },
 }, {
   timestamps: true
