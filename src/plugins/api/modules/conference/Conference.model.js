@@ -9,6 +9,7 @@ const ConferenceSchema = new Schema({
   createdby: { type: Schema.Types.ObjectId, required: true, ref: 'users' },
   atendees: [{ type: Schema.Types.ObjectId, ref: 'users' }],
   resource: { type: Schema.Types.ObjectId, ref: 'resources', required: true },
+  isapproved: { type: Boolean, required: false, default: false }
 }, {
   timestamps: true
 });
