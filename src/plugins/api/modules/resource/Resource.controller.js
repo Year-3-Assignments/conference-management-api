@@ -9,7 +9,7 @@ export async function createResource(req, res, next) {
   await resource.save()
   .then((data) => {
     const notificationData = {
-      from: '60dd6e43b4582435c46122c9',
+      from: '60df41db9a6b1d1c58f3f74f',
       message: `Dear ${req.user.firstname} ${req.user.lastname}, your resource request successfully sent to the reviewer`,
       to: req.user._id,
       isarchive: false
@@ -203,7 +203,7 @@ export async function makeResourcePaid(req, res, next) {
     await Notification.findByIdAndUpdate(req.body.notificationId, { isarchive: true });
 
     const notificationData = {
-      from: '60dd6e43b4582435c46122c9',
+      from: '60df41db9a6b1d1c58f3f74f',
       message: `Dear ${req.user.firstname}, your payment for resource is successful. Thank you`,
       to: req.user._id,
       isarchive: false
