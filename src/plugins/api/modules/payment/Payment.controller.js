@@ -99,7 +99,9 @@ export async function chargeResourceAmount(req, res, next) {
 export async function getPaidPaymentsForAdmin(req, res, next) {
   if (req.user && _.isEqual(req.user.role, 'ROLE_ADMIN')) {
     await Payment.find({})
+    .sort({ createdAt: 'desc' })
     .populate('conference', '_id name')
+    .populate('user', '_id firstname lastname email imageurl phonenumber')
     .populate('attendee', '_id firstname lastname email imageurl phonenumber')
     .then(data => {
       responseHandler.sendRespond(res, data);

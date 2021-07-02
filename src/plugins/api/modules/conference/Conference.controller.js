@@ -136,16 +136,17 @@ export async function deleteConference(req, res, next) {
 export async function updateConferenceStatus(req, res, next) {
   if (req.user && req.body) {
     if (_.isEqual(req.user.role, 'ROLE_ADMIN')) {
-      let conference = await Conference.findById(req.body._id);
+      let conference = await Conference.findById(req.body.id);
       if (!conference) {
         response.handleError(res, 'Resource not found');
         return;
       }
       let statusData = {
-        status: req.body.status
+        status: req.body.status,
+        isapproved: true
       };
 
-      await Conference.findByIdAndUpdate(req.body._id, statusData)
+      await Conference.findByIdAndUpdate(req.body.id, statusData)
       .then(data => {
         response.sendRespond(res, data);
         return;
@@ -168,6 +169,20 @@ export async function getConferenceForHomePage(req, res, next) {
   .populate('atendees', '_id firstname lastname email phonenumber imageurl')
   .populate({ path: 'resource', populate:{ path: 'resourcepersons', model: 'users', select: '_id firstname lastname email phonenumber imageurl description'}})
   .limit(1)
+  .then((data) => {
+    return res.status(200).json(data);
+  })
+  .catch(error => {
+    return res.status(500).json(error.message);
+  });
+}
+
+export async function getApprovedConferences(req, res, next) {
+  await Conference.find({ isapproved: true })
+  .sort({ createdAt: 'desc' })
+  .populate('createdby', '_id firstname lastname email phonenumber imageurl')
+  .populate('atendees', '_id firstname lastname email phonenumber imageurl')
+  .populate({ path: 'resource', populate:{ path: 'resourcepersons', model: 'users', select: '_id firstname lastname email phonenumber imageurl description'}})
   .then((data) => {
     return res.status(200).json(data);
   })
