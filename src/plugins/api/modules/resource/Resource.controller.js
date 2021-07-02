@@ -195,8 +195,6 @@ export async function makeResourcePaid(req, res, next) {
       amount: req.body.amount
     };
 
-    console.log(paymentDetails)
-
     const payment = new Payment(paymentDetails);
     await payment.save();
 
