@@ -163,7 +163,6 @@ export async function getWorkshopsForHomePage(req, res, next) {
     path: 'resource', 
     populate:{ path: 'resourcepersons', model: 'users', select: '_id firstname lastname email phonenumber imageurl description'}
   })
-  .limit(1)
   .then((data) => {
     return res.status(200).json(data)
   })
