@@ -12,6 +12,7 @@ module.exports = function (app, db) {
   router.put('/updatestatus', auth, controller.updateConferenceStatus);
   router.delete('/delete/:id', auth, controller.deleteConference);
   router.get('/conference/home', controller.getConferenceForHomePage);
+  router.get('/approve/conference', controller.getApprovedConferences);
 
   return { router: router };
 }
