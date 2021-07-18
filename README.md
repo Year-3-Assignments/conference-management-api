@@ -18,3 +18,12 @@ This is backend API for conference management system. Technology that we are usi
 > Before create the pull request, please chack if there are merge conflicts in your code. If there are not conflicts, then create the **Pull Request(PR)**
 8. Then you have to assign one or more team members to review your code.:eyes:
 > After reviewing process are done and your code is ready to merge, one of our organization member will merge your changes to the **master** branch.
+## Run the API using Docker image
+This docker container holds the backend API application for the REACH conference system.
+
+#### How to set up and run the application
+1. Install **Docker** into your local computer.
+2. Pull the docker image using **docker pull rusiruavb/conference-api-docker:latest**
+3. Run **docker run -p 9002:9090 rusiruavb/conference-api-docker:latest** command to create the docker container and run.
+4. Then the application will be exposed on port 9002.
+5. Navigate to your browser and copy/paste this link **http://localhost:9002/**
